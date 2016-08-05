@@ -10,6 +10,7 @@ Namespace Models.Extensions
         <Required> Public Property Author As String
 
         Public Overridable Property ExtensionCollection As ExtensionCollection
+        Public Overridable Property Versions As ICollection(Of ExtensionVersion)
     End Class
 End Namespace
 

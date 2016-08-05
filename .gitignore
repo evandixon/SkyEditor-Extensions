@@ -250,3 +250,4 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+/SkyEditor-Extensions/Extensions/files/5663734f-709e-4b5f-bb94-60e5b1d2f0b5

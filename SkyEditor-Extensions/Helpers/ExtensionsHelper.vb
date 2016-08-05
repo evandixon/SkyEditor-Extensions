@@ -7,10 +7,26 @@ Imports SkyEditor_Extensions.Models.Extensions
 Namespace Helpers
     Public Class ExtensionsHelper
         ''' <summary>
+        ''' Creates or selects the default extension collection.
+        ''' </summary>
+        ''' <param name="context">The data current data context from which to select the collection.</param>
+        ''' <returns>The default extension collection.</returns>
+        Public Shared Async Function GetDefaultExtensionCollection(context As ExtensionsContext) As Task(Of ExtensionCollection)
+            Dim defaultCollectionName = ConfigurationManager.AppSettings("DefaultExtensionCollectionName")
+            Dim collection As ExtensionCollection = Await context.ExtensionCollections.Where(Function(x) Not x.ParentCollectionId.HasValue AndAlso x.Name = defaultCollectionName).FirstOrDefaultAsync
+            If collection Is Nothing Then
+                collection = New ExtensionCollection With {.ID = Guid.NewGuid, .Name = defaultCollectionName}
+                context.ExtensionCollections.Add(collection)
+                Await context.SaveChangesAsync()
+            End If
+            Return collection
+        End Function
+
+        ''' <summary>
         ''' Installs an extension to the database and filesystem.
         ''' </summary>
         ''' <param name="filename">Path of the extension zip file.</param>
-        ''' <param name="collection">The collection in which to put the extension.  Must be "linked" to entity framework.</param>
+        ''' <param name="collectionID">ID of the collection in which to put the extension.  Must be "linked" to entity framework.</param>
         ''' <param name="context">The data current data context in which to put the extension metadata.</param>
         Public Shared Async Function InstallExtension(filename As String, collectionID As Guid, context As ExtensionsContext) As Task
             'Read the info file
@@ -69,14 +85,7 @@ Namespace Helpers
         ''' <param name="filename">Path of the extension zip file.</param>
         Public Shared Async Function InstallExtension(filename As String) As Task
             Using context As New ExtensionsContext
-                'Create or select the default extension collection
-                Dim defaultCollectionName = ConfigurationManager.AppSettings("DefaultExtensionCollectionName")
-                Dim collection As ExtensionCollection = Await context.ExtensionCollections.Where(Function(x) x.Name = defaultCollectionName).FirstOrDefaultAsync
-                If collection Is Nothing Then
-                    collection = New ExtensionCollection With {.ID = Guid.NewGuid, .Name = defaultCollectionName}
-                    context.ExtensionCollections.Add(collection)
-                    Await context.SaveChangesAsync()
-                End If
+                Dim collection = Await GetDefaultExtensionCollection(context)
 
                 Await InstallExtension(filename, collection.ID, context)
             End Using
