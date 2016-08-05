@@ -243,6 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.vb" />
+    <Compile Include="App_Start\ExtensionsMonitorSetup.vb" />
     <Compile Include="App_Start\FilterConfig.vb" />
     <Compile Include="App_Start\identityConfig.vb" />
     <Compile Include="App_Start\RouteConfig.vb" />
@@ -281,8 +282,13 @@
     <Compile Include="Global.asax.vb">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ExtensionsHelper.vb" />
     <Compile Include="Models\AccountBindingModels.vb" />
     <Compile Include="Models\AccountViewModels.vb" />
+    <Compile Include="Models\Extensions\Extension.vb" />
+    <Compile Include="Models\Extensions\ExtensionCollection.vb" />
+    <Compile Include="Models\Extensions\ExtensionsContext.vb" />
+    <Compile Include="Models\Extensions\ExtensionVersion.vb" />
     <Compile Include="Models\IdentityModels.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
